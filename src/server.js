@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import authRoutes from './routes/authRoutes.js';
-// import other routes later...
+import customerSupplierRoutes from './routes/CustomerSupplier.js'; 
 
 const app = express();
 
@@ -20,9 +20,8 @@ app.use(cookieParser());
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/customersuppliers', customerSupplierRoutes); 
 
-// ONLY ADD THIS WHEN YOU HAVE A 404 handler (later)
-// app.use('*', (req, res) => res.status(404).json({ message: 'Route not found' }));
 
 // DB Connection
 mongoose.connect(process.env.MONGO_URI)
