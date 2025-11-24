@@ -9,7 +9,6 @@ import {
 
 const router = express.Router();
 
-// Specific, clear, and professional route names
 router.post('/createCustomerSupplier', createCustomerSupplier);
 router.get('/getAllCustomerSuppliers', getAllCustomerSuppliers);
 router.put('/updateCustomerSupplier/:id', updateCustomerSupplier);

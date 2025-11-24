@@ -34,24 +34,40 @@ export const getAllCustomerSuppliers = async (req, res) => {
   }
 };
 
-// UPDATE
 export const updateCustomerSupplier = async (req, res) => {
   try {
     const { id } = req.params;
-    const updated = await CustomerSupplier.findByIdAndUpdate(id, req.body, { new: true });
-    if (!updated) return res.status(404).json({ success: false, message: 'Not found' });
+
+    if (req.body.code) {
+      const existing = await CustomerSupplier.findOne({ code: req.body.code, _id: { $ne: id } });
+      if (existing) {
+        return res.status(400).json({ success: false, message: 'Code already used by another entry' });
+      }
+    }
+
+    const updated = await CustomerSupplier.findByIdAndUpdate(
+      id,
+      { $set: req.body },
+      { new: true, runValidators: true }
+    );
+
+    if (!updated) {
+      return res.status(404).json({ success: false, message: 'Not found' });
+    }
+
     res.json({ success: true, data: updated });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
   }
 };
 
-// DELETE
 export const deleteCustomerSupplier = async (req, res) => {
   try {
     const { id } = req.params;
     const deleted = await CustomerSupplier.findByIdAndDelete(id);
-    if (!deleted) return res.status(404).json({ success: false, message: 'Not found' });
+    if (!deleted) {
+      return res.status(404).json({ success: false, message: 'Not found' });
+    }
     res.json({ success: true, message: 'Deleted successfully' });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
