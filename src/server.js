@@ -7,6 +7,7 @@ dotenv.config();
 
 import authRoutes from './routes/authRoutes.js';
 import customerSupplierRoutes from './routes/CustomerSupplier.js'; 
+import currencyRoutes from './routes/currency.js';
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use(cookieParser());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/customersuppliers', customerSupplierRoutes); 
+app.use('/api/currencies', currencyRoutes);
 
 
 // DB Connection
