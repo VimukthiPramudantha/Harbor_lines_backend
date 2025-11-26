@@ -10,6 +10,7 @@ import customerSupplierRoutes from './routes/CustomerSupplier.js';
 import currencyRoutes from './routes/currency.js';
 import uomRoutes from './routes/uom.js';
 import bankRoutes from './routes/bank.js';
+import taxRoutes from './routes/tax.js';
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use('/api/customersuppliers', customerSupplierRoutes);
 app.use('/api/currencies', currencyRoutes);
 app.use('/api/uoms', uomRoutes);
 app.use('/api/banks', bankRoutes);
+app.use('/api/taxes', taxRoutes);
 
 // DB Connection
 mongoose.connect(process.env.MONGO_URI)
