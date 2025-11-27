@@ -13,6 +13,7 @@ import bankRoutes from './routes/bank.js';
 import taxRoutes from './routes/tax.js';
 
 import vesselRoutes from './routes/vessel.js';
+import flightRoutes from './routes/flight.js';
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.use('/api/banks', bankRoutes);
 app.use('/api/taxes', taxRoutes);
 
 app.use('/api/vessels', vesselRoutes); 
+app.use('/api/flights', flightRoutes);
 
 // DB Connection
 mongoose.connect(process.env.MONGO_URI)
