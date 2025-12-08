@@ -15,6 +15,7 @@ import taxRoutes from './routes/tax.js';
 import vesselRoutes from './routes/vessel.js';
 import flightRoutes from './routes/flight.js';
 import seaDestinationRoutes from './routes/seaDestination.js';
+import airDestinationRoutes from './routes/airDestination.js';
 
 const app = express();
 
@@ -37,6 +38,7 @@ app.use('/api/taxes', taxRoutes);
 app.use('/api/vessels', vesselRoutes); 
 app.use('/api/flights', flightRoutes);
 app.use('/api/sea-destinations', seaDestinationRoutes);
+app.use('/api/air-destinations', airDestinationRoutes);
 
 // DB Connection
 mongoose.connect(process.env.MONGO_URI)
