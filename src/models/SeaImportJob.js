@@ -5,7 +5,8 @@ const seaImportJobSchema = new mongoose.Schema({
   jobNum: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    trim: true
   },
   jobDate: { type: Date, default: Date.now },
   finalizeDate: Date,
@@ -14,23 +15,29 @@ const seaImportJobSchema = new mongoose.Schema({
     enum: ['SOC', 'Freight Forwarding', 'Car Carrier', 'Casual Caller', 'Transhipment', 'Main Line', 'FF + Clearing', 'NVOCC'],
     default: 'Freight Forwarding'
   },
-  vesselId: String,
+  vesselId: { type: mongoose.Schema.Types.ObjectId, ref: 'Vessel' },
   vesselName: String,
   voyage: String,
-  portDepartureId: String,
+
+  // Loading Vessel
+  portDepartureId: { type: mongoose.Schema.Types.ObjectId, ref: 'SeaDestination' },
   portDepartureName: String,
-  portDischargeId: String,
+  portDischargeId: { type: mongoose.Schema.Types.ObjectId, ref: 'SeaDestination' },
   portDischargeName: String,
-  originAgentId: String,
+  originAgentId: { type: mongoose.Schema.Types.ObjectId, ref: 'CustomerSupplier' },
   originAgentName: String,
-  carrierId: String,
+  carrierId: { type: mongoose.Schema.Types.ObjectId, ref: 'CustomerSupplier' },
   carrierName: String,
-  shipAgentId: String,
+  shipAgentId: { type: mongoose.Schema.Types.ObjectId, ref: 'CustomerSupplier' },
   shipAgentName: String,
-  principleCustomerId: String,
+
+  // Final Destination
+  principleCustomerId: { type: mongoose.Schema.Types.ObjectId, ref: 'CustomerSupplier' },
   principleCustomerName: String,
-  localAgentId: String,
+  localAgentId: { type: mongoose.Schema.Types.ObjectId, ref: 'CustomerSupplier' },
   localAgentName: String,
+
+  // Additional Details
   etaDateTime: Date,
   status: { type: String, enum: ['Active', 'Inactive'], default: 'Active' },
   loadingVoyage: String,
@@ -44,7 +51,22 @@ const seaImportJobSchema = new mongoose.Schema({
   terminal: { type: String, enum: ['JCT', 'UCT', 'SAGT', 'CICT', 'CWIT'], default: 'JCT' },
   slpaReference: String,
   numContainers: Number,
-  impNo: String
-}, { timestamps: true });
+  impNo: String,
+
+  // NEW: Port of Loading Information
+  portOfLoadingId: { type: mongoose.Schema.Types.ObjectId, ref: 'SeaDestination' },
+  portOfLoadingName: String,
+  mblNumber: {
+    type: String,
+    trim: true,
+    uppercase: true
+  }
+}, { 
+  timestamps: true 
+});
+
+// Indexes
+seaImportJobSchema.index({ jobNum: 1 }, { unique: true });
+seaImportJobSchema.index({ mblNumber: 1 }, { unique: true, sparse: true }); // optional: make MBL unique
 
 export default mongoose.model('SeaImportJob', seaImportJobSchema);
