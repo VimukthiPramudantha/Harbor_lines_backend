@@ -1,6 +1,32 @@
 // backend/models/SeaImportJob.js
 import mongoose from 'mongoose';
 
+const containerSchema = new mongoose.Schema({
+  sno: { type: Number, required: true },
+  containerNo: { 
+    type: String, 
+    required: true, 
+  },
+  containerType: { 
+    type: String, 
+    required: true,
+    enum: [
+      '45HC', '45 Reefer', '45 GP', 'AIR Freight',
+      '40 HC', '40 OT', '40 Reefdry', '40 Flat Rack', '40 Flat', '40 GP',
+      '20 Vertical', '20 OT', '20 Reefdry', '20 Flat', '20 GP'
+    ]
+  },
+  sealNo: String,
+  yardCode: String,
+  yardName: String,
+  fclLcl: {
+    type: String,
+    required: true,
+    enum: ['FCL/FCL', 'FCL/LCL', 'LCL/LCL', 'MCC+Local', 'MCC+Full']
+  },
+  onAccount: String
+}, { _id: false });
+
 const seaImportJobSchema = new mongoose.Schema({
   jobNum: {
     type: String,
@@ -15,6 +41,8 @@ const seaImportJobSchema = new mongoose.Schema({
     enum: ['SOC', 'Freight Forwarding', 'Car Carrier', 'Casual Caller', 'Transhipment', 'Main Line', 'FF + Clearing', 'NVOCC'],
     default: 'Freight Forwarding'
   },
+
+  // Vessel Info
   vesselId: { type: mongoose.Schema.Types.ObjectId, ref: 'Vessel' },
   vesselName: String,
   voyage: String,
@@ -53,20 +81,19 @@ const seaImportJobSchema = new mongoose.Schema({
   numContainers: Number,
   impNo: String,
 
-  // NEW: Port of Loading Information
+  // Port of Loading
   portOfLoadingId: { type: mongoose.Schema.Types.ObjectId, ref: 'SeaDestination' },
   portOfLoadingName: String,
-  mblNumber: {
-    type: String,
-    trim: true,
-    uppercase: true
-  }
+  mblNumber: { type: String, uppercase: true, trim: true },
+
+  // NEW: Multiple Containers
+  containers: [containerSchema]
 }, { 
   timestamps: true 
 });
 
 // Indexes
 seaImportJobSchema.index({ jobNum: 1 }, { unique: true });
-seaImportJobSchema.index({ mblNumber: 1 }, { unique: true, sparse: true }); // optional: make MBL unique
+seaImportJobSchema.index({ mblNumber: 1 }, { unique: true, sparse: true });
 
 export default mongoose.model('SeaImportJob', seaImportJobSchema);
