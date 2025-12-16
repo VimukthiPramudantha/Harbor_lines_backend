@@ -1,4 +1,3 @@
-// backend/models/Flight.js
 import mongoose from 'mongoose';
 
 const flightSchema = new mongoose.Schema({
@@ -28,8 +27,5 @@ const flightSchema = new mongoose.Schema({
 }, {
   timestamps: true
 });
-
-// Unique index on flightNo
-flightSchema.index({ flightNo: 1 }, { unique: true });
 
 export default mongoose.model('Flight', flightSchema);

@@ -1,4 +1,3 @@
-// backend/models/SeaDestination.js
 import mongoose from 'mongoose';
 
 const seaDestinationSchema = new mongoose.Schema({
@@ -18,8 +17,5 @@ const seaDestinationSchema = new mongoose.Schema({
 }, {
   timestamps: true
 });
-
-// Unique index on code
-seaDestinationSchema.index({ code: 1 }, { unique: true });
 
 export default mongoose.model('SeaDestination', seaDestinationSchema);

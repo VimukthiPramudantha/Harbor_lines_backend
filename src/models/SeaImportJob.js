@@ -5,7 +5,7 @@ const containerSchema = new mongoose.Schema({
   sno: { type: Number, required: true },
   containerNo: { 
     type: String, 
-    required: true, 
+    required: true 
   },
   containerType: { 
     type: String, 
@@ -38,7 +38,11 @@ const seaImportJobSchema = new mongoose.Schema({
   finalizeDate: Date,
   jobCategory: {
     type: String,
-    enum: ['SOC', 'Freight Forwarding', 'Car Carrier', 'Casual Caller', 'Transhipment', 'Main Line', 'FF + Clearing', 'NVOCC'],
+    enum: [
+      'SOC', 'Freight Forwarding', 'Car Carrier',
+      'Casual Caller', 'Transhipment', 'Main Line',
+      'FF + Clearing', 'NVOCC'
+    ],
     default: 'Freight Forwarding'
   },
 
@@ -76,7 +80,11 @@ const seaImportJobSchema = new mongoose.Schema({
   exchangeRate: Number,
   terminalRef: String,
   service: String,
-  terminal: { type: String, enum: ['JCT', 'UCT', 'SAGT', 'CICT', 'CWIT'], default: 'JCT' },
+  terminal: {
+    type: String,
+    enum: ['JCT', 'UCT', 'SAGT', 'CICT', 'CWIT'],
+    default: 'JCT'
+  },
   slpaReference: String,
   numContainers: Number,
   impNo: String,
@@ -86,14 +94,16 @@ const seaImportJobSchema = new mongoose.Schema({
   portOfLoadingName: String,
   mblNumber: { type: String, uppercase: true, trim: true },
 
-  // NEW: Multiple Containers
+  // Containers
   containers: [containerSchema]
 }, { 
   timestamps: true 
 });
 
-// Indexes
-seaImportJobSchema.index({ jobNum: 1 }, { unique: true });
-seaImportJobSchema.index({ mblNumber: 1 }, { unique: true, sparse: true });
+// ✅ Keep ONLY this index (correct usage)
+seaImportJobSchema.index(
+  { mblNumber: 1 },
+  { unique: true, sparse: true }
+);
 
 export default mongoose.model('SeaImportJob', seaImportJobSchema);

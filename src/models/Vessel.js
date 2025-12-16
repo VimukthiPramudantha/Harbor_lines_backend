@@ -27,7 +27,4 @@ const vesselSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Unique index on code
-vesselSchema.index({ code: 1 }, { unique: true });
-
 export default mongoose.model('Vessel', vesselSchema);

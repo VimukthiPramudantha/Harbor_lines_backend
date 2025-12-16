@@ -55,7 +55,4 @@ const bankSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Prevent duplicate bankCode
-bankSchema.index({ bankCode: 1 }, { unique: true });
-
 export default mongoose.model('Bank', bankSchema);

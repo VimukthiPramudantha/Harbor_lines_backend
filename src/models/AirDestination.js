@@ -1,4 +1,3 @@
-// backend/models/AirDestination.js
 import mongoose from 'mongoose';
 
 const airDestinationSchema = new mongoose.Schema({
@@ -24,8 +23,5 @@ const airDestinationSchema = new mongoose.Schema({
 }, {
   timestamps: true
 });
-
-// Unique index on code
-airDestinationSchema.index({ code: 1 }, { unique: true });
 
 export default mongoose.model('AirDestination', airDestinationSchema);

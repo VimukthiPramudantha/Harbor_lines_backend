@@ -68,7 +68,4 @@ const taxSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Ensure unique tax code
-taxSchema.index({ code: 1 }, { unique: true });
-
 export default mongoose.model('Tax', taxSchema);
