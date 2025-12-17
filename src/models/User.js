@@ -12,10 +12,11 @@ const userSchema = new mongoose.Schema({
     minlength: 3,
     maxlength: 20
   },
-  name: {
+  username: {  
     type: String,
     required: true,
     trim: true,
+    minlength: 3,
     maxlength: 50
   },
   password: {
@@ -26,7 +27,7 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     enum: ['Admin', 'Supervisor', 'Power User', 'Import Manager', 'Operations Executive', 'Operations Manager'],
-    default: 'Admin' 
+    default: 'Admin'  
   },
   isActive: {
     type: Boolean,
@@ -34,14 +35,14 @@ const userSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-// Hash password before saving
+// Hash password
 userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
   this.password = await bcrypt.hash(this.password, 12);
   next();
 });
 
-// Compare password method
+// Compare password
 userSchema.methods.comparePassword = async function(candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };

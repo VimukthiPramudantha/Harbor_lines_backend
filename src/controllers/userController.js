@@ -1,25 +1,34 @@
 // backend/controllers/userController.js
 import User from '../models/User.js';
 
-// CREATE User (Admin only - we'll protect later)
+// CREATE USER (Admin only - use protect + restrict later)
 export const createUser = async (req, res) => {
   try {
-    const { code, name, password } = req.body;
+    const { code, username, password, confirmPassword } = req.body;
 
-    if (!code || !name || !password) {
-      return res.status(400).json({ success: false, message: 'Code, Name and Password are required' });
+    if (!code || !username || !password) {
+      return res.status(400).json({ success: false, message: 'Code, Name, and Password are required' });
     }
 
-    const existing = await User.findOne({ code });
-    if (existing) {
-      return res.status(400).json({ success: false, message: 'User code already exists' });
+    if (password !== confirmPassword) {
+      return res.status(400).json({ success: false, message: 'Passwords do not match' });
+    }
+
+    const codeExists = await User.findOne({ code });
+    if (codeExists) {
+      return res.status(400).json({ success: false, message: 'User Code already exists' });
+    }
+
+    const usernameExists = await User.findOne({ username });
+    if (usernameExists) {
+      return res.status(400).json({ success: false, message: 'Username already exists' });
     }
 
     const user = await User.create({
       code,
-      name,
+      username,
       password,
-      role: 'Admin' // Force Admin
+      role: 'Admin'  // ← Always Admin
     });
 
     res.status(201).json({
@@ -27,7 +36,7 @@ export const createUser = async (req, res) => {
       data: {
         _id: user._id,
         code: user.code,
-        name: user.name,
+        username: user.username,
         role: user.role,
         isActive: user.isActive,
         createdAt: user.createdAt
@@ -39,7 +48,7 @@ export const createUser = async (req, res) => {
   }
 };
 
-// GET ALL Users
+// GET ALL USERS
 export const getAllUsers = async (req, res) => {
   try {
     const users = await User.find().select('-password').sort({ createdAt: -1 });
@@ -49,15 +58,19 @@ export const getAllUsers = async (req, res) => {
   }
 };
 
-// UPDATE User
+// UPDATE USER (Name & Active status only)
 export const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, isActive } = req.body;
+    const { username, isActive } = req.body;
+
+    if (!username) {
+      return res.status(400).json({ success: false, message: 'Name is required' });
+    }
 
     const user = await User.findByIdAndUpdate(
       id,
-      { name, isActive },
+      { username, isActive },
       { new: true, runValidators: true }
     ).select('-password');
 
