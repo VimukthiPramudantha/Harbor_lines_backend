@@ -1,34 +1,35 @@
 // backend/controllers/userController.js
 import User from '../models/User.js';
 
-// CREATE USER (Admin only - use protect + restrict later)
 export const createUser = async (req, res) => {
   try {
-    const { code, username, password, confirmPassword } = req.body;
+    const { code, username, password } = req.body;
 
-    if (!code || !username || !password) {
-      return res.status(400).json({ success: false, message: 'Code, Name, and Password are required' });
+    const trimmedCode = code?.trim().toUpperCase();
+    const trimmedUsername = username?.trim();
+    const trimmedPassword = password?.trim();
+
+    if (!trimmedCode || !trimmedUsername || !trimmedPassword) {
+      return res.status(400).json({ success: false, message: 'Code, Username, and Password are required' });
     }
 
-    if (password !== confirmPassword) {
-      return res.status(400).json({ success: false, message: 'Passwords do not match' });
-    }
-
-    const codeExists = await User.findOne({ code });
+    // Check duplicate code
+    const codeExists = await User.findOne({ code: trimmedCode });
     if (codeExists) {
       return res.status(400).json({ success: false, message: 'User Code already exists' });
     }
 
-    const usernameExists = await User.findOne({ username });
+    // Check duplicate username
+    const usernameExists = await User.findOne({ username: trimmedUsername });
     if (usernameExists) {
       return res.status(400).json({ success: false, message: 'Username already exists' });
     }
 
     const user = await User.create({
-      code,
-      username,
-      password,
-      role: 'Admin'  // ← Always Admin
+      code: trimmedCode,
+      username: trimmedUsername,
+      password: trimmedPassword,
+      role: 'Admin'
     });
 
     res.status(201).json({
@@ -44,7 +45,8 @@ export const createUser = async (req, res) => {
       message: 'User created successfully as Admin'
     });
   } catch (error) {
-    res.status(400).json({ success: false, message: error.message });
+    console.error('Create User Error:', error);
+    res.status(400).json({ success: false, message: error.message || 'Failed to create user' });
   }
 };
 
@@ -54,23 +56,33 @@ export const getAllUsers = async (req, res) => {
     const users = await User.find().select('-password').sort({ createdAt: -1 });
     res.json({ success: true, data: users });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    console.error('Get Users Error:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch users' });
   }
 };
 
-// UPDATE USER (Name & Active status only)
 export const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
     const { username, isActive } = req.body;
 
-    if (!username) {
-      return res.status(400).json({ success: false, message: 'Name is required' });
+    const trimmedUsername = username?.trim();
+
+    if (!trimmedUsername) {
+      return res.status(400).json({ success: false, message: 'Username is required' });
+    }
+
+    const usernameExists = await User.findOne({ 
+      username: trimmedUsername, 
+      _id: { $ne: id } 
+    });
+    if (usernameExists) {
+      return res.status(400).json({ success: false, message: 'Username already in use by another user' });
     }
 
     const user = await User.findByIdAndUpdate(
       id,
-      { username, isActive },
+      { username: trimmedUsername, isActive },
       { new: true, runValidators: true }
     ).select('-password');
 
@@ -84,6 +96,7 @@ export const updateUser = async (req, res) => {
       message: 'User updated successfully'
     });
   } catch (error) {
-    res.status(400).json({ success: false, message: error.message });
+    console.error('Update User Error:', error);
+    res.status(400).json({ success: false, message: error.message || 'Failed to update user' });
   }
 };
