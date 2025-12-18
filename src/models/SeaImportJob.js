@@ -46,12 +46,10 @@ const seaImportJobSchema = new mongoose.Schema({
     default: 'Freight Forwarding'
   },
 
-  // Vessel Info
   vesselId: { type: mongoose.Schema.Types.ObjectId, ref: 'Vessel' },
   vesselName: String,
   voyage: String,
 
-  // Loading Vessel
   portDepartureId: { type: mongoose.Schema.Types.ObjectId, ref: 'SeaDestination' },
   portDepartureName: String,
   portDischargeId: { type: mongoose.Schema.Types.ObjectId, ref: 'SeaDestination' },
@@ -63,13 +61,11 @@ const seaImportJobSchema = new mongoose.Schema({
   shipAgentId: { type: mongoose.Schema.Types.ObjectId, ref: 'CustomerSupplier' },
   shipAgentName: String,
 
-  // Final Destination
   principleCustomerId: { type: mongoose.Schema.Types.ObjectId, ref: 'CustomerSupplier' },
   principleCustomerName: String,
   localAgentId: { type: mongoose.Schema.Types.ObjectId, ref: 'CustomerSupplier' },
   localAgentName: String,
 
-  // Additional Details
   etaDateTime: Date,
   status: { type: String, enum: ['Active', 'Inactive'], default: 'Active' },
   loadingVoyage: String,
@@ -89,18 +85,15 @@ const seaImportJobSchema = new mongoose.Schema({
   numContainers: Number,
   impNo: String,
 
-  // Port of Loading
   portOfLoadingId: { type: mongoose.Schema.Types.ObjectId, ref: 'SeaDestination' },
   portOfLoadingName: String,
   mblNumber: { type: String, uppercase: true, trim: true },
 
-  // Containers
   containers: [containerSchema]
 }, { 
   timestamps: true 
 });
 
-// ✅ Keep ONLY this index (correct usage)
 seaImportJobSchema.index(
   { mblNumber: 1 },
   { unique: true, sparse: true }
