@@ -1,49 +1,62 @@
 # Harbor Lines ERP Backend
 
-The backend server for the **Harbor Lines ERP** system, built with Node.js, Express, and MongoDB. This API manages authentication, master data, freight configurations, and logistic job operations.
+![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Node](https://img.shields.io/badge/Node.js-v18%2B-green.svg)
+![Express](https://img.shields.io/badge/Express-v5.1.0-lightgrey.svg)
 
-## 🚀 Technologies Used
+The robust backend API for the **Harbor Lines ERP** system. Built with Node.js, Express, and MongoDB, this service manages the core logic for freight operations, master data administration, and secure user authentication.
 
-*   **Runtime**: [Node.js](https://nodejs.org/)
-*   **Framework**: [Express.js](https://expressjs.com/)
-*   **Database**: [MongoDB](https://www.mongodb.com/) (via [Mongoose](https://mongoosejs.com/))
-*   **Authentication**: JSON Web Tokens (JWT) & bcryptjs
-*   **Security**: Helmet, CORS
-*   **Utils**: Dotenv, Cookie Parser, Morgan
+## 🚀 Technologies
 
-## ✨ Features
+- **Runtime**: [Node.js](https://nodejs.org/)
+- **Framework**: [Express.js](https://expressjs.com/) (v5.1.0)
+- **Database**: [MongoDB](https://www.mongodb.com/) with [Mongoose](https://mongoosejs.com/)
+- **Authentication**: JWT (JSON Web Tokens) & bcryptjs
+- **Security**: Helmet, CORS, Rate Limiting
+- **Logging**: Morgan
 
-### 🔐 Authentication & Security
-*   Secure user authentication using JWT.
-*   Password hashing with bcryptjs.
-*   Cookie-based session management.
-*   CORS configuration for frontend integration.
+## ✨ Key Features
 
-### 📡 API Endpoints
+### 🔐 Security & Auth
+- **JWT Authentication**: Stateless, secure user sessions.
+- **Role-Based Access**: Granular permission control for API endpoints.
+- **Data Protection**: Password hashing and input validation.
 
-#### User Management
-*   `/api/auth`: User registration and login.
+### 🗂️ Master Data Management
+Comprehensive CRUD endpoints for system configuration:
+- **Partners**: Customer and Supplier management.
+- **Finance**: Currency rates, Bank details, and Tax rules.
+- **Standards**: Unit of Measurement (UOM) definitions.
 
-#### Master Files (Core Data)
-*   `/api/customersuppliers`: Manage customers and suppliers.
-*   `/api/currencies`: Manage currency data.
-*   `/api/uoms`: Unit of Measurement standards.
-*   `/api/banks`: Banking information.
-*   `/api/taxes`: Tax configurations.
+### 🚢 Freight Operations
+- **Asset Management**: Databases for Vessels and Flights.
+- **Route Configuration**: Sea and Air destination management.
+- **Import Jobs**: Full lifecycle management for Sea Import jobs.
+- **Documentation**: Generation and retrieval of Delivery Orders.
 
-#### Freight Master
-*   `/api/vessels`: Shipping vessel management.
-*   `/api/flights`: Flight details management.
-*   `/api/sea-destinations`: Sea ports and destinations.
-*   `/api/air-destinations`: Airports and destinations.
+## 📡 API Endpoints
 
-#### Operational Jobs
-*   `/api/jobs/sea-import`: Manage Sea Freight Import jobs.
+| Category | Endpoint | Description |
+|----------|----------|-------------|
+| **Auth** | `/api/auth` | Login and Registration |
+| **Users** | `/api/users` | User administration |
+| **Partners** | `/api/customersuppliers` | Customers & Suppliers |
+| **Finance** | `/api/currencies` | Currency exchange rates |
+| **Finance** | `/api/banks` | Bank account details |
+| **Finance** | `/api/taxes` | Tax configurations |
+| **Standards** | `/api/uoms` | Units of Measurement |
+| **Freight** | `/api/vessels` | Sea Vessels |
+| **Freight** | `/api/flights` | Air Flights |
+| **Routes** | `/api/sea-destinations` | Sea Ports |
+| **Routes** | `/api/air-destinations` | Airports |
+| **Ops** | `/api/jobs/sea-import` | Sea Import Jobs |
+| **Ops** | `/api/delivery-orders` | Delivery Orders |
 
 ## 🛠️ Installation & Setup
 
-1.  **Clone the repository** (if applicable) or navigate to the project directory:
+1.  **Clone the repository**:
     ```bash
+    git clone https://github.com/VimukthiPramudantha/Harbor_lines_backend.git
     cd Harbor_lines_backend
     ```
 
@@ -52,31 +65,32 @@ The backend server for the **Harbor Lines ERP** system, built with Node.js, Expr
     npm install
     ```
 
-3.  **Environment Configuration**:
-    Create a `.env` file in the root directory and add the following variables:
+3.  **Configure Environment**:
+    Create a `.env` file in the root directory:
     ```env
     PORT=5000
-    MONGO_URI=your_mongodb_connection_string
-    JWT_SECRET=your_jwt_secret_key
+    MONGO_URI=mongodb://localhost:27017/harbor_lines
+    JWT_SECRET=your_super_secret_key_change_this
     ```
 
-4.  **Run the application**:
-    *   **Development** (with hot reload):
-        ```bash
-        npm run dev
-        ```
-    *   **Start**:
-        ```bash
-        node src/server.js
-        ```
+4.  **Run the Server**:
+    ```bash
+    # Development (with hot reload)
+    npm run dev
 
-    The server will start on `http://localhost:5000` (or the PORT defined in your .env).
+    # Production
+    npm start
+    ```
 
 ## 📁 Project Structure
 
-*   `src/models`: Mongoose schemas for MongoDB.
-*   `src/controllers`: Request logic and handlers.
-*   `src/routes`: API route definitions.
-*   `src/middleware`: Custom middleware (auth, etc.).
-*   `src/utils`: Helper functions.
-*   `src/server.js`: Entry point and app configuration.
+```text
+src/
+├── config/         # Database and app configuration
+├── controllers/    # Request handlers (logic layer)
+├── middleware/     # Auth and error handling middleware
+├── models/         # Mongoose data schemas
+├── routes/         # API route definitions
+├── utils/          # Helper functions
+└── server.js       # App entry point
+```
