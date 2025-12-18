@@ -11,6 +11,7 @@ import currencyRoutes from './routes/currency.js';
 import uomRoutes from './routes/uom.js';
 import bankRoutes from './routes/bank.js';
 import taxRoutes from './routes/tax.js';
+import chargeRoutes from './routes/chargeRoutes.js';
 
 import vesselRoutes from './routes/vessel.js';
 import flightRoutes from './routes/flight.js';
@@ -40,6 +41,7 @@ app.use('/api/currencies', currencyRoutes);
 app.use('/api/uoms', uomRoutes);
 app.use('/api/banks', bankRoutes);
 app.use('/api/taxes', taxRoutes);
+app.use('/api/charges', chargeRoutes);
 
 app.use('/api/vessels', vesselRoutes); 
 app.use('/api/flights', flightRoutes);
