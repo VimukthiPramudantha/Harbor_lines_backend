@@ -11,9 +11,9 @@ const containerDetailSchema = new mongoose.Schema({
   containerType: String,
   grossWeight: Number,
   noOfPackages: Number,
-  soc: Boolean,
+  soc: { type: Boolean, default: false },
   agent: String,
-  deposit: Boolean,
+  deposit: { type: Boolean, default: false },
   serialNo: String
 });
 
@@ -39,13 +39,15 @@ const deliveryOrderSchema = new mongoose.Schema({
   doType: { type: String, enum: ['Custom Copy', 'SLPA 1', 'SLPA 2', 'SLPA 3'], required: true },
   deStuffRequired: { type: Boolean, default: false },
 
-  // Main Details
+  // Main Details - Optional refs (removed required)
   portOfLoadingId: { type: mongoose.Schema.Types.ObjectId, ref: 'SeaDestination' },
   portOfLoadingName: String,
   portOfLoadingCode: String,
+
   originAgentId: { type: mongoose.Schema.Types.ObjectId, ref: 'CustomerSupplier' },
   originAgentName: String,
   originAgentCode: String,
+
   carrierId: { type: mongoose.Schema.Types.ObjectId, ref: 'CustomerSupplier' },
   carrierName: String,
   carrierCode: String,
@@ -138,6 +140,24 @@ deliveryOrderSchema.pre('save', async function(next) {
     const count = await this.constructor.countDocuments();
     this.doNum = `DO-${new Date().getFullYear()}-${String(count + 1).padStart(6, '0')}`;
   }
+  next();
+});
+
+// Optional: Clean empty ObjectId strings before save
+deliveryOrderSchema.pre('save', function(next) {
+  const objectIdFields = [
+    'portOfLoadingId',
+    'originAgentId',
+    'carrierId',
+    'notifyPartyId'
+  ];
+
+  objectIdFields.forEach(field => {
+    if (this[field] === '' || this[field] === null || this[field] === undefined) {
+      this[field] = undefined;
+    }
+  });
+
   next();
 });
 
