@@ -20,6 +20,9 @@ import airDestinationRoutes from './routes/airDestination.js';
 import seaImportJobRoutes from './routes/seaImportJob.js';
 import userRoutes from './routes/userRoutes.js';
 
+import deliveryOrderRoutes from './routes/deliveryOrderRoutes.js';
+
+
 const app = express();
 
 // Middleware
@@ -45,6 +48,8 @@ app.use('/api/air-destinations', airDestinationRoutes);
 
 app.use('/api/jobs/sea-import', seaImportJobRoutes);
 app.use('/api/users', userRoutes);
+
+app.use('/api/delivery-orders', deliveryOrderRoutes);
 
 // DB Connection
 mongoose.connect(process.env.MONGO_URI)
