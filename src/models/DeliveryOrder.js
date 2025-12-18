@@ -1,0 +1,144 @@
+// backend/models/DeliveryOrder.js
+import mongoose from 'mongoose';
+
+const hsCodeSchema = new mongoose.Schema({
+  code: { type: String, required: true },
+  name: { type: String, required: true }
+});
+
+const containerDetailSchema = new mongoose.Schema({
+  containerNo: { type: String, required: true },
+  containerType: String,
+  grossWeight: Number,
+  noOfPackages: Number,
+  soc: Boolean,
+  agent: String,
+  deposit: Boolean,
+  serialNo: String
+});
+
+const fclContainerSchema = new mongoose.Schema({
+  type: String,
+  count: Number
+});
+
+const deStuffContainerSchema = new mongoose.Schema({
+  type: String,
+  count: Number
+});
+
+const deliveryOrderSchema = new mongoose.Schema({
+  jobId: { type: mongoose.Schema.Types.ObjectId, ref: 'SeaImportJob', required: true },
+  jobNum: { type: String, required: true },
+
+  // Job Information
+  houseBl: { type: String, required: true },
+  masterBlNumber: String,
+  masterBlSerial: String,
+  houseBlSerial: String,
+  doType: { type: String, enum: ['Custom Copy', 'SLPA 1', 'SLPA 2', 'SLPA 3'], required: true },
+  deStuffRequired: { type: Boolean, default: false },
+
+  // Main Details
+  portOfLoadingId: { type: mongoose.Schema.Types.ObjectId, ref: 'SeaDestination' },
+  portOfLoadingName: String,
+  portOfLoadingCode: String,
+  originAgentId: { type: mongoose.Schema.Types.ObjectId, ref: 'CustomerSupplier' },
+  originAgentName: String,
+  originAgentCode: String,
+  carrierId: { type: mongoose.Schema.Types.ObjectId, ref: 'CustomerSupplier' },
+  carrierName: String,
+  carrierCode: String,
+
+  consigneeId: { type: mongoose.Schema.Types.ObjectId, ref: 'CustomerSupplier', required: true },
+  consigneeCode: String,
+  consigneeName: String,
+  consigneeAddress: String,
+  consigneeStreet: String,
+  consigneeCountry: String,
+
+  shipperId: { type: mongoose.Schema.Types.ObjectId, ref: 'CustomerSupplier', required: true },
+  shipperCode: String,
+  shipperName: String,
+  shipperAddress: String,
+  shipperStreet: String,
+  shipperCountry: String,
+
+  notifyPartyEnabled: { type: Boolean, default: false },
+  notifyPartyId: { type: mongoose.Schema.Types.ObjectId, ref: 'CustomerSupplier' },
+  notifyPartyCode: String,
+  notifyPartyName: String,
+  notifyPartyAddress: String,
+  notifyPartyStreet: String,
+  notifyPartyCountry: String,
+
+  doExpiresOn: { type: Date, required: true },
+  displayDoExpires: { type: Boolean, default: false },
+  dangerousCargoDays: Number,
+  dangerousCargoGroup: String,
+  dateOfLanding: Date,
+
+  deStuffContainers: [deStuffContainerSchema],
+  fclContainers: [fclContainerSchema],
+
+  noOfPackages: Number,
+  packageTypeCode: String,
+  packageTypeName: String,
+  noOfPackagesWords: String,
+
+  masterBlCollectDate: Date,
+  masterBlCollectEnabled: { type: Boolean, default: false },
+  docReleaseDate: Date,
+  docReleaseEnabled: { type: Boolean, default: false },
+
+  remarks: String,
+  mainLine: String,
+  tinNoOwner: String,
+  revenueType: { type: String, enum: ['Nomination', 'Free Hand'], default: 'Nomination' },
+  salesmanId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  salesmanName: String,
+  salesmanCode: String,
+
+  // Sub Details
+  marksNumbers: String,
+  description: String,
+  grossWeight: Number,
+  cbm: Number,
+  blType: { type: String, enum: ['House BL', 'Master BL'], required: true },
+  commodity: String,
+  freightTerm: String,
+  hblTerm: String,
+  rateFom: String,
+  emptyReturn: String,
+  terminal: String,
+  placeOfReceipt: String,
+  hsCodes: [hsCodeSchema],
+
+  // Company Details (static)
+  companyCode: String,
+  companyName: String,
+  companyAddress: String,
+  companyCity: String,
+  companyCountry: String,
+  companyTel1: String,
+  companyTel2: String,
+
+  // Container Details
+  containerDetails: [containerDetailSchema],
+
+  // Auto-generated
+  doNum: { type: String, unique: true },
+
+  status: { type: String, enum: ['Draft', 'Submitted', 'Approved'], default: 'Draft' }
+}, { timestamps: true });
+
+// Auto-generate DO Number
+deliveryOrderSchema.pre('save', async function(next) {
+  if (!this.doNum) {
+    const count = await this.constructor.countDocuments();
+    this.doNum = `DO-${new Date().getFullYear()}-${String(count + 1).padStart(6, '0')}`;
+  }
+  next();
+});
+
+export default mongoose.model('DeliveryOrder', deliveryOrderSchema);
