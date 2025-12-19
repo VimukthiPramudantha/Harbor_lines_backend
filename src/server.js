@@ -22,6 +22,7 @@ import seaImportJobRoutes from './routes/seaImportJob.js';
 import userRoutes from './routes/userRoutes.js';
 
 import deliveryOrderRoutes from './routes/deliveryOrderRoutes.js';
+import salesInvoiceRoutes from './routes/salesInvoiceRoutes.js';
 
 
 const app = express();
@@ -52,6 +53,7 @@ app.use('/api/jobs/sea-import', seaImportJobRoutes);
 app.use('/api/users', userRoutes);
 
 app.use('/api/delivery-orders', deliveryOrderRoutes);
+app.use('/api/sales-invoices', salesInvoiceRoutes);
 
 // DB Connection
 mongoose.connect(process.env.MONGO_URI)
