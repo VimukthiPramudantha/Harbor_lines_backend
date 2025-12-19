@@ -1,22 +1,13 @@
-// backend/controllers/chargeController.js
 import Charge from '../models/Charge.js';
 
 export const createCharge = async (req, res) => {
   try {
     const { code, name, rate, plGroup } = req.body;
-
     const chargeExists = await Charge.findOne({ code });
-    if (chargeExists) {
-      return res.status(400).json({ success: false, message: 'Charge code already exists' });
-    }
+    if (chargeExists) return res.status(400).json({ success: false, message: 'Charge code already exists' });
 
     const charge = await Charge.create({ code, name, rate, plGroup });
-
-    res.status(201).json({
-      success: true,
-      data: charge,
-      message: 'Charge created successfully'
-    });
+    res.status(201).json({ success: true, data: charge });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
   }
@@ -37,12 +28,9 @@ export const updateCharge = async (req, res) => {
     const updates = req.body;
 
     const charge = await Charge.findByIdAndUpdate(id, updates, { new: true, runValidators: true });
+    if (!charge) return res.status(404).json({ success: false, message: 'Charge not found' });
 
-    if (!charge) {
-      return res.status(404).json({ success: false, message: 'Charge not found' });
-    }
-
-    res.json({ success: true, data: charge, message: 'Charge updated successfully' });
+    res.json({ success: true, data: charge });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
   }
