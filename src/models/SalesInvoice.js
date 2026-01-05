@@ -72,7 +72,7 @@ const salesInvoiceSchema = new mongoose.Schema({
 
   // Totals
   totalAmount: Number,
-  status: { type: String, enum: ['Draft', 'Issued', 'Paid'], default: 'Draft' }
+  status: { type: String, enum: ['Active', 'Inactive'], default: 'Active' }
 }, { timestamps: true });
 
 // Auto-generate Invoice No
