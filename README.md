@@ -32,7 +32,8 @@ Comprehensive CRUD endpoints for system configuration:
 - **Asset Management**: Databases for Vessels and Flights.
 - **Route Configuration**: Sea and Air destination management.
 - **Import Jobs**: Full lifecycle management for Sea Import jobs.
-- **Documentation**: Generation and retrieval of Delivery Orders.
+- **Documentation Support**: Integrated data endpoints for dynamic **Sales Invoices** and **Manifest Reports**, including complex vessel/voyage lookups and HBL/MBL grouping.
+- **DO Management**: Generation and retrieval of Delivery Orders.
 
 ## 📡 API Endpoints
 
