@@ -11,9 +11,9 @@ const containerSchema = new mongoose.Schema({
     type: String, 
     required: true,
     enum: [
-      '45HC', '45 Reefer', '45 GP', 'AIR Freight',
-      '40 HC', '40 OT', '40 Reefdry', '40 Flat Rack', '40 Flat', '40 GP',
-      '20 Vertical', '20 OT', '20 Reefdry', '20 Flat', '20 GP'
+      '45HC', '45Reefer', '45GP', 'AIRFreight',
+      '40HC', '40OT', '40Reefdry', '40Flat Rack', '40Flat', '40GP',
+      '20Vertical', '20OT', '20Reefdry', '20Flat', '20GP'
     ]
   },
   sealNo: String,
