@@ -145,7 +145,7 @@ deliveryOrderSchema.pre('save', async function(next) {
   
   if (!this.agentDoNo) {
     const lastDO = await this.constructor.findOne({}, { agentDoNo: 1 }, { sort: { agentDoNo: -1 } });
-    this.agentDoNo = lastDO && lastDO.agentDoNo ? lastDO.agentDoNo + 1 : 1721;
+    this.agentDoNo = lastDO && lastDO.agentDoNo ? lastDO.agentDoNo + 1 : 1746;
   }
   next();
 });
