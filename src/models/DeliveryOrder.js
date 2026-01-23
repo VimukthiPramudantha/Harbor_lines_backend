@@ -14,7 +14,8 @@ const containerDetailSchema = new mongoose.Schema({
   soc: { type: Boolean, default: false },
   agent: String,
   deposit: { type: Boolean, default: false },
-  serialNo: String
+  serialNo: String,
+  fclType: { type: String, enum: ['20 FT', '40 FT', 'Over 40 FT'] }
 });
 
 const fclContainerSchema = new mongoose.Schema({
