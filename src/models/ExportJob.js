@@ -1,6 +1,8 @@
+// backend/models/ExportJob.js
 import mongoose from 'mongoose';
 
 const exportJobSchema = new mongoose.Schema({
+  // Auto-generated or user-provided
   jobNum: {
     type: String,
     required: true,
@@ -14,16 +16,8 @@ const exportJobSchema = new mongoose.Schema({
     uppercase: true,
     trim: true
   },
-  onBoardDate: {
-    type: Date,
-    required: true
-  },
-  deliveryApplyTo: {
-    type: String,
-    required: true
-  },
 
-  // Parties (references)
+  // Parties (references to CustomerSupplier)
   shipperId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'CustomerSupplier',
@@ -39,21 +33,50 @@ const exportJobSchema = new mongoose.Schema({
     ref: 'CustomerSupplier'
   },
 
-  // Shipment info (can be auto-filled or manual)
-  vesselVoyage: String,
-  portLoading: String,
-  portDischarge: String,
-  placeDelivery: String,
+  // B/L core dates & instructions
+  onBoardDate: {
+    type: Date,
+    required: true
+  },
+  deliveryApplyTo: {
+    type: String,
+    required: true,
+    trim: true
+  },
 
-  // Payment & B/L
-  freightPayableAt: String,
+  // Shipment routing (can come from vessel/port selection)
+  vesselVoyage: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  portLoading: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  portDischarge: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  placeDelivery: {
+    type: String,
+    trim: true
+  },
+
+  // Payment & originals
+  freightPayableAt: {
+    type: String,
+    trim: true
+  },
   numOriginalBLs: {
     type: Number,
     min: 1,
     default: 3
   },
 
-  // Cargo
+  // Cargo description
   marksNumbers: String,
   containerSealNumbers: String,
   numPackages: Number,
@@ -61,17 +84,19 @@ const exportJobSchema = new mongoose.Schema({
   grossWeight: Number,
   measurementCBM: Number,
 
+  // Status & audit
   status: {
     type: String,
     enum: ['Draft', 'Confirmed', 'Shipped', 'Cancelled'],
     default: 'Draft'
   },
-
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
-  createdAt: { type: Date, default: Date.now }
+
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
 }, { timestamps: true });
 
 export default mongoose.model('ExportJob', exportJobSchema);

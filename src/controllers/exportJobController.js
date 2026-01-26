@@ -1,3 +1,4 @@
+// backend/controllers/exportJobController.js
 import ExportJob from '../models/ExportJob.js';
 
 // Get all export jobs
@@ -9,16 +10,17 @@ export const getAllExportJobs = async (req, res) => {
       .populate('notifyPartyId', 'name code')
       .sort({ createdAt: -1 });
 
-    res.json({ success: true, data: jobs });
+    res.json({ success: true, count: jobs.length, data: jobs });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 };
 
-// Create new export B/L
+// Create new Export B/L
 export const createExportJob = async (req, res) => {
   try {
     const {
+      jobNum,
       blNumber,
       onBoardDate,
       deliveryApplyTo,
@@ -39,21 +41,24 @@ export const createExportJob = async (req, res) => {
       measurementCBM
     } = req.body;
 
-    // Basic validation
-    if (!blNumber || !onBoardDate || !shipperId || !consigneeId) {
-      return res.status(400).json({ success: false, message: 'Missing required fields' });
+    // Required fields validation
+    if (!blNumber || !onBoardDate || !shipperId || !consigneeId || !vesselVoyage || !portLoading || !portDischarge) {
+      return res.status(400).json({
+        success: false,
+        message: 'Missing required fields: blNumber, onBoardDate, shipperId, consigneeId, vesselVoyage, portLoading, portDischarge'
+      });
     }
 
-    // Auto-generate jobNum if not provided (example: EXP-2025-001)
-    let jobNum = req.body.jobNum;
-    if (!jobNum) {
+    // Auto-generate jobNum if not provided
+    let finalJobNum = jobNum;
+    if (!finalJobNum) {
       const count = await ExportJob.countDocuments();
       const year = new Date().getFullYear();
-      jobNum = `EXP-${year}-${String(count + 1).padStart(3, '0')}`;
+      finalJobNum = `EXP-${year}-${String(count + 1).padStart(4, '0')}`;
     }
 
     const newJob = await ExportJob.create({
-      jobNum,
+      jobNum: finalJobNum,
       blNumber,
       onBoardDate,
       deliveryApplyTo,
@@ -65,14 +70,14 @@ export const createExportJob = async (req, res) => {
       portDischarge,
       placeDelivery,
       freightPayableAt,
-      numOriginalBLs,
+      numOriginalBLs: numOriginalBLs || 3,
       marksNumbers,
       containerSealNumbers,
       numPackages,
       descriptionGoods,
       grossWeight,
       measurementCBM,
-      createdBy: req.user?._id // if you have auth middleware
+      createdBy: req.user?._id || null   // if you have auth middleware
     });
 
     res.status(201).json({ success: true, data: newJob });
