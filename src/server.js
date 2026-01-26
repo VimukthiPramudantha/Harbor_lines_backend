@@ -5,7 +5,7 @@ import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 dotenv.config();
 
-// Import all routes
+// Import routes
 import authRoutes from './routes/authRoutes.js';
 import customerSupplierRoutes from './routes/CustomerSupplier.js'; 
 import currencyRoutes from './routes/currency.js';
@@ -25,7 +25,7 @@ import userRoutes from './routes/userRoutes.js';
 import deliveryOrderRoutes from './routes/deliveryOrderRoutes.js';
 import salesInvoiceRoutes from './routes/salesInvoiceRoutes.js';
 
-// NEW: Export routes (add this file next)
+// NEW: Export routes
 import exportJobRoutes from './routes/exportJobRoutes.js';
 
 const app = express();
