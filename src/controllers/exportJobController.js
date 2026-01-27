@@ -5,9 +5,9 @@ import ExportJob from '../models/ExportJob.js';
 export const getAllExportJobs = async (req, res) => {
   try {
     const jobs = await ExportJob.find()
-      .populate('shipperId', 'name code')
-      .populate('consigneeId', 'name code')
-      .populate('notifyPartyId', 'name code')
+      .populate('shipperId', 'name code address telNo')
+      .populate('consigneeId', 'name code address telNo')
+      .populate('notifyPartyId', 'name code address telNo')
       .populate('vesselId', 'name code')
       .sort({ createdAt: -1 });
 
