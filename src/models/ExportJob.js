@@ -43,9 +43,12 @@ const exportJobSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
-
-  // Shipment routing (can come from vessel/port selection)
-  vesselVoyage: {
+  vesselId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Vessel',
+    required: true
+  },
+  voyage: {
     type: String,
     required: true,
     trim: true
