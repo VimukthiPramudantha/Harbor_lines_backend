@@ -8,6 +8,7 @@ export const getAllExportJobs = async (req, res) => {
       .populate('shipperId', 'name code')
       .populate('consigneeId', 'name code')
       .populate('notifyPartyId', 'name code')
+      .populate('vesselId', 'name code')
       .sort({ createdAt: -1 });
 
     res.json({ success: true, count: jobs.length, data: jobs });
@@ -27,7 +28,8 @@ export const createExportJob = async (req, res) => {
       shipperId,
       consigneeId,
       notifyPartyId,
-      vesselVoyage,
+      vesselId,
+      voyage,
       portLoading,
       portDischarge,
       placeDelivery,
@@ -42,10 +44,10 @@ export const createExportJob = async (req, res) => {
     } = req.body;
 
     // Required fields validation
-    if (!blNumber || !onBoardDate || !shipperId || !consigneeId || !vesselVoyage || !portLoading || !portDischarge) {
+    if (!blNumber || !onBoardDate || !shipperId || !consigneeId || !vesselId || !voyage || !portLoading || !portDischarge) {
       return res.status(400).json({
         success: false,
-        message: 'Missing required fields: blNumber, onBoardDate, shipperId, consigneeId, vesselVoyage, portLoading, portDischarge'
+        message: 'Missing required fields: blNumber, onBoardDate, shipperId, consigneeId, vesselId, voyage, portLoading, portDischarge'
       });
     }
 
@@ -65,7 +67,8 @@ export const createExportJob = async (req, res) => {
       shipperId,
       consigneeId,
       notifyPartyId,
-      vesselVoyage,
+      vesselId,
+      voyage,
       portLoading,
       portDischarge,
       placeDelivery,
