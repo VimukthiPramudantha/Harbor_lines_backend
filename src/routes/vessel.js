@@ -9,6 +9,7 @@ import {
 
 const router = express.Router();
 
+
 router.post('/createVessel', createVessel);
 router.get('/getAllVessels', getAllVessels);
 router.put('/updateVessel/:id', updateVessel);
