@@ -14,7 +14,8 @@ const containerDetailSchema = new mongoose.Schema({
   soc: { type: Boolean, default: false },
   agent: String,
   deposit: { type: Boolean, default: false },
-  serialNo: String
+  serialNo: String,
+  fclType: { type: String, enum: ['20 FT', '40 FT', 'Over 40 FT'] }
 });
 
 const fclContainerSchema = new mongoose.Schema({
@@ -130,15 +131,21 @@ const deliveryOrderSchema = new mongoose.Schema({
 
   // Auto-generated
   doNum: { type: String, unique: true },
+  agentDoNo: { type: Number, unique: true },
 
   status: { type: String, enum: ['Draft', 'Submitted', 'Approved'], default: 'Draft' }
 }, { timestamps: true });
 
-// Auto-generate DO Number
+// Auto-generate DO Number and Agent DO No
 deliveryOrderSchema.pre('save', async function(next) {
   if (!this.doNum) {
     const count = await this.constructor.countDocuments();
     this.doNum = `DO-${new Date().getFullYear()}-${String(count + 1).padStart(6, '0')}`;
+  }
+  
+  if (!this.agentDoNo) {
+    const lastDO = await this.constructor.findOne({}, { agentDoNo: 1 }, { sort: { agentDoNo: -1 } });
+    this.agentDoNo = lastDO && lastDO.agentDoNo ? lastDO.agentDoNo + 1 : 1746;
   }
   next();
 });
