@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 dotenv.config();
 
+// Import routes
 import authRoutes from './routes/authRoutes.js';
 import customerSupplierRoutes from './routes/CustomerSupplier.js'; 
 import currencyRoutes from './routes/currency.js';
@@ -24,6 +25,8 @@ import userRoutes from './routes/userRoutes.js';
 import deliveryOrderRoutes from './routes/deliveryOrderRoutes.js';
 import salesInvoiceRoutes from './routes/salesInvoiceRoutes.js';
 
+// NEW: Export routes
+import exportJobRoutes from './routes/exportJobRoutes.js';
 
 const app = express();
 
@@ -50,6 +53,10 @@ app.use('/api/sea-destinations', seaDestinationRoutes);
 app.use('/api/air-destinations', airDestinationRoutes);
 
 app.use('/api/jobs/sea-import', seaImportJobRoutes);
+
+// NEW: Export jobs route
+app.use('/api/jobs/sea-export', exportJobRoutes);
+
 app.use('/api/users', userRoutes);
 
 app.use('/api/delivery-orders', deliveryOrderRoutes);
