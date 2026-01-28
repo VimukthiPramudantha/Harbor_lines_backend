@@ -29,6 +29,7 @@ import salesInvoiceRoutes from './routes/salesInvoiceRoutes.js';
 import exportJobRoutes from './routes/exportJobRoutes.js';
 
 import canadaRoutes from './routes/canadaRoutes.js';
+import statsRoutes from './routes/statsRoutes.js';
 
 const app = express();
 
@@ -66,6 +67,7 @@ app.use('/api/delivery-orders', deliveryOrderRoutes);
 app.use('/api/sales-invoices', salesInvoiceRoutes);
 
 app.use('/api/canada', canadaRoutes);
+app.use('/api/stats', statsRoutes);
 
 // DB Connection
 mongoose.connect(process.env.MONGO_URI)
