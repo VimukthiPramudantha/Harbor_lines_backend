@@ -28,6 +28,8 @@ import salesInvoiceRoutes from './routes/salesInvoiceRoutes.js';
 // NEW: Export routes
 import exportJobRoutes from './routes/exportJobRoutes.js';
 
+import canadaRoutes from './routes/canadaRoutes.js';
+
 const app = express();
 
 // Middleware
@@ -62,6 +64,8 @@ app.use('/api/users', userRoutes);
 
 app.use('/api/delivery-orders', deliveryOrderRoutes);
 app.use('/api/sales-invoices', salesInvoiceRoutes);
+
+app.use('/api/canada', canadaRoutes);
 
 // DB Connection
 mongoose.connect(process.env.MONGO_URI)

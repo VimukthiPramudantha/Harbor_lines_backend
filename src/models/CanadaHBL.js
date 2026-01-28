@@ -1,0 +1,29 @@
+// backend/models/CanadaHBL.js
+import mongoose from 'mongoose';
+
+const referenceSchema = new mongoose.Schema({
+  weight: { type: Number },
+  cbmPerPackage: { type: Number },
+  noOfPackages: { type: Number },
+  description: { type: String }
+});
+
+const hblSchema = new mongoose.Schema({
+  hblNumber: { type: String },
+  shipperName: { type: String },
+  shipperAddress: { type: String },
+  consigneeName: { type: String },
+  consigneeAddress: { type: String },
+  notifyName: { type: String },
+  notifyAddress: { type: String },
+  references: [referenceSchema]
+});
+
+const manifestSchema = new mongoose.Schema({
+  hbls: [hblSchema],
+  totalWeight: { type: Number, default: 0 },
+  totalCBM: { type: Number, default: 0 },
+  createdAt: { type: Date, default: Date.now }
+});
+
+export default mongoose.model('HLManifest', manifestSchema);
