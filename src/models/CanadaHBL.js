@@ -12,10 +12,10 @@ const referenceSchema = new mongoose.Schema({
   consigneeNIC: { type: String },
   consigneePhone: { type: String },
   packageType: { type: String, default: 'CTN' },
-  packageCharges: { type: Number, default: 0 },
-  serviceMaintenance: { type: Number, default: 0 },
-  handlingCharges: { type: Number, default: 0 },
-  otherCharges: { type: Number, default: 0 }
+  charges: [{
+    label: { type: String },
+    amount: { type: Number, default: 0 }
+  }]
 });
 
 const hblSchema = new mongoose.Schema({

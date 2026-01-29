@@ -65,17 +65,54 @@ export const updateHBLCharges = async (req, res) => {
     // Update charges for each reference
     references.forEach(updatedRef => {
       const ref = hbl.references.find(r => r.refNum === updatedRef.refNum);
-      if (ref) {
-        ref.packageCharges = updatedRef.packageCharges;
-        ref.serviceMaintenance = updatedRef.serviceMaintenance;
-        ref.handlingCharges = updatedRef.handlingCharges;
-        ref.otherCharges = updatedRef.otherCharges;
+      if (ref && updatedRef.charges) {
+        ref.charges = updatedRef.charges;
       }
     });
 
     await manifest.save();
 
     res.json({ success: true, message: 'HBL charges updated successfully', data: manifest });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+// Update a full HBL in a manifest (including references and all fields)
+export const updateHBL = async (req, res) => {
+  try {
+    const { manifestId, hblId } = req.params;
+    const updatedHBLData = req.body; // Full HBL object
+
+    const manifest = await HLManifest.findById(manifestId);
+    if (!manifest) {
+      return res.status(404).json({ success: false, message: 'Manifest not found' });
+    }
+
+    // Find and update the specific HBL
+    const hblIndex = manifest.hbls.findIndex(h => h._id.toString() === hblId);
+    if (hblIndex === -1) {
+      return res.status(404).json({ success: false, message: 'HBL not found in manifest' });
+    }
+
+    // Merge/Replace the HBL data
+    manifest.hbls[hblIndex] = { ...manifest.hbls[hblIndex].toObject(), ...updatedHBLData };
+
+    // Recalculate manifest totals
+    let totalWeight = 0;
+    let totalCBM = 0;
+    manifest.hbls.forEach(h => {
+      h.references.forEach(ref => {
+        totalWeight += ref.weight || 0;
+        totalCBM += ref.cbm || 0;
+      });
+    });
+    manifest.totalWeight = totalWeight;
+    manifest.totalCBM = totalCBM;
+
+    await manifest.save();
+
+    res.json({ success: true, message: 'HBL updated and totals recalculated', data: manifest });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
