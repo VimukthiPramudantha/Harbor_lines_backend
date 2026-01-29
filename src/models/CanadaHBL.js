@@ -2,18 +2,20 @@
 import mongoose from 'mongoose';
 
 const referenceSchema = new mongoose.Schema({
+  refNum: { type: String },
   weight: { type: Number },
-  cbmPerPackage: { type: Number },
+  cbm: { type: Number },
   noOfPackages: { type: Number },
-  description: { type: String }
+  description: { type: String },
+  consigneeName: { type: String },
+  consigneeAddress: { type: String },
+  consigneeNIC: { type: String }
 });
 
 const hblSchema = new mongoose.Schema({
   hblNumber: { type: String },
   shipperName: { type: String },
   shipperAddress: { type: String },
-  consigneeName: { type: String },
-  consigneeAddress: { type: String },
   notifyName: { type: String },
   notifyAddress: { type: String },
   references: [referenceSchema]

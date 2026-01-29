@@ -19,7 +19,7 @@ export const createManifest = async (req, res) => {
     hbls.forEach(hbl => {
       hbl.references.forEach(ref => {
         totalWeight += ref.weight || 0;
-        totalCBM += (ref.cbmPerPackage || 0) * (ref.noOfPackages || 0);
+        totalCBM += ref.cbm || 0;
       });
     });
 
