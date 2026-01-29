@@ -11,7 +11,11 @@ const referenceSchema = new mongoose.Schema({
   consigneeAddress: { type: String },
   consigneeNIC: { type: String },
   consigneePhone: { type: String },
-  packageType: { type: String, default: 'CTN' }
+  packageType: { type: String, default: 'CTN' },
+  packageCharges: { type: Number, default: 0 },
+  serviceMaintenance: { type: Number, default: 0 },
+  handlingCharges: { type: Number, default: 0 },
+  otherCharges: { type: Number, default: 0 }
 });
 
 const hblSchema = new mongoose.Schema({

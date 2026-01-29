@@ -44,3 +44,39 @@ export const getAllManifests = async (req, res) => {
     res.status(500).json({ success: false, message: err.message });
   }
 };
+
+// Update charges for a specific HBL in a manifest
+export const updateHBLCharges = async (req, res) => {
+  try {
+    const { manifestId, hblNumber } = req.params;
+    const { references } = req.body; // Array of references with charges
+
+    const manifest = await HLManifest.findById(manifestId);
+    if (!manifest) {
+      return res.status(404).json({ success: false, message: 'Manifest not found' });
+    }
+
+    // Find the HBL in the manifest
+    const hbl = manifest.hbls.find(h => h.hblNumber === hblNumber);
+    if (!hbl) {
+      return res.status(404).json({ success: false, message: 'HBL not found in manifest' });
+    }
+
+    // Update charges for each reference
+    references.forEach(updatedRef => {
+      const ref = hbl.references.find(r => r.refNum === updatedRef.refNum);
+      if (ref) {
+        ref.packageCharges = updatedRef.packageCharges;
+        ref.serviceMaintenance = updatedRef.serviceMaintenance;
+        ref.handlingCharges = updatedRef.handlingCharges;
+        ref.otherCharges = updatedRef.otherCharges;
+      }
+    });
+
+    await manifest.save();
+
+    res.json({ success: true, message: 'HBL charges updated successfully', data: manifest });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
